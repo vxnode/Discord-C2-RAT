@@ -1,0 +1,33 @@
+# DiscordRAT - Requirements.txt
+# Python 3.11+ required
+
+# Core Dependencies
+discord.py>=2.3.0
+flask>=2.3.0
+flask-cors>=4.0.0
+flask-socketio>=5.3.0
+python-socketio>=5.8.0
+eventlet>=0.33.0
+requests>=2.31.0
+
+# System Information
+psutil>=5.9.0
+
+# Image Processing
+Pillow>=9.5.0
+mss>=9.0.0
+opencv-python>=4.8.0
+
+# Windows-Specific (Windows only)
+pywin32>=306
+pynput>=1.7.6
+pycryptodome>=3.18.0
+wmi>=1.5.1
+pycaw>=20230407
+comtypes>=1.1.14
+
+# Optional (for advanced features)
+# numpy>=1.24.0  # Required by opencv-python
+
+# Linux-Specific (if running on Linux)
+# python-apt>=2.0.0  # For some Linux features
