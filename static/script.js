@@ -1,15 +1,7 @@
-// ============================================
-// DiscordRAT Control Center - Web Interface
-// ============================================
-
 let selectedClient = null;
 let socket = null;
 let clients = {};
 let currentPath = '';
-
-// ============================================
-// COMMANDS DATA
-// ============================================
 
 const COMMANDS = {
     'File Management': [
@@ -78,10 +70,6 @@ const COMMANDS = {
         { name: 'selfdestruct', desc: '⚠️ Remove RAT and all traces' },
     ],
 };
-
-// ============================================
-// SOCKET.IO CONNECTION
-// ============================================
 
 function connectSocket() {
     socket = io();
@@ -178,10 +166,6 @@ function connectSocket() {
     });
 }
 
-// ============================================
-// CLIENT MANAGEMENT
-// ============================================
-
 function updateClientLists() {
     const clientList = document.getElementById('clientList');
     const allClientsList = document.getElementById('allClientsList');
@@ -257,10 +241,6 @@ function refreshClients() {
     addTerminalOutput('🔄 Refreshing clients...', 'info');
 }
 
-// ============================================
-// COMMANDS PAGE
-// ============================================
-
 function renderCommands() {
     const container = document.getElementById('commandsContainer');
     if (!container) return;
@@ -292,10 +272,6 @@ function renderCommands() {
     }
     container.innerHTML = html;
 }
-
-// ============================================
-// FILE BROWSER
-// ============================================
 
 function loadFiles() {
     if (!selectedClient) {
@@ -396,7 +372,7 @@ function renderFileList(files) {
     });
     
     let html = `
-        <div style="display:grid; grid-template-columns: 1fr auto auto; gap:8px; padding:8px 12px; background:var(--surface-light); border-radius:6px; margin-bottom:8px; font-size:12px; color:var(--text-muted); font-weight:600;">
+        <div style="display:grid; grid-template-columns: 1fr auto auto; gap:8px; padding:8px 12px; background:var(--surface-light); border-radius:6px; margin-bottom:8px; font-size:12px; color:var(--text-muted);">
             <span>Name</span>
             <span>Size</span>
             <span style="text-align:right;">Actions</span>
@@ -444,10 +420,6 @@ function createFolder() {
         setTimeout(() => runFileCommand('ls'), 500);
     }
 }
-
-// ============================================
-// IMAGE HANDLING
-// ============================================
 
 function updateImages(clientId) {
     const gallery = document.getElementById('imagesGallery');
@@ -506,10 +478,6 @@ function clearImages() {
     .catch(error => addTerminalOutput(`❌ Error: ${error.message}`, 'error'));
 }
 
-// ============================================
-// TERMINAL
-// ============================================
-
 function addTerminalOutput(message, type = 'info') {
     const output = document.getElementById('terminalOutput');
     if (!output) return;
@@ -566,10 +534,6 @@ function sendCommand(clientId, command) {
     })
     .catch(error => addTerminalOutput(`❌ Error: ${error.message}`, 'error'));
 }
-
-// ============================================
-// NAVIGATION
-// ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
     connectSocket();
