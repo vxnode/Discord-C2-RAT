@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="Project Banner" width="100%">
+</p>
+
 # ⚠️ DiscordRAT - Educational C2 Framework
 # 
 # WARNING: This tool is for EDUCATIONAL PURPOSES ONLY!
